@@ -15,6 +15,8 @@ namespace cg::renderer
 	template<typename VB, typename RT>
 	class rasterizer
 	{
+//		TODO: static const float FLT_MAX = 1.0f;
+
 	public:
 		rasterizer(){};
 		~rasterizer(){};

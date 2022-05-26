@@ -10,7 +10,7 @@ set(INCLUDE
         libs/tinyobjloader
         libs/linalg
         libs/cxxopts/include
-        libs/D3DX12
+        libs/d3dx12
         src)
 
 set(SOURCE
