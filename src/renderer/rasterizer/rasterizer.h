@@ -15,9 +15,8 @@ namespace cg::renderer
 	template<typename VB, typename RT>
 	class rasterizer
 	{
-//		TODO: static const float FLT_MAX = 1.0f;
-
 	public:
+		constexpr static const float FLT_MAX = 1.0f;
 		rasterizer(){};
 		~rasterizer(){};
 		void set_render_target(
@@ -70,9 +69,19 @@ namespace cg::renderer
 			{
 				render_target->item(i) = in_clear_value;
 			}
+
+//			hash_color(render_target);
 		}
 		// TODO: Lab 1.06. Adjust set_render_target, and clear_render_target methods of cg::renderer::rasterizer class to consume a depth buffer
 	}
+
+	//TODO: random_color
+//	void hash_color(float3 color)
+//	{
+//		color.x = std::rand();
+//		color.y = std::rand();
+//		color.z = std::rand();
+//	}
 
 	template<typename VB, typename RT>
 	inline void rasterizer<VB, RT>::set_vertex_buffer(
