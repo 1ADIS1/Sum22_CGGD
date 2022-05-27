@@ -140,10 +140,19 @@ namespace cg
 	};
 
 
-	// TODO: Lab 1.03. Implement `cg::vertex` struct
 	struct vertex
 	{
-		
+		// nx, ny, nz - are normalized xyz
+		// u, v - texture coords
+		// emissive - for light sources
+		// diffuse - for surfaces reflections
+		// ambient - for the whole image
+		float x, y, z;
+		float nx, ny, nz;
+		float u, v;
+		float ambient_r, ambient_g, ambient_b;
+		float diffuse_r, diffuse_g, diffuse_b;
+		float emissive_r, emissive_g, emissive_b;
 	};
 
 }// namespace cg
