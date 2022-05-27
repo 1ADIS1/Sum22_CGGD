@@ -42,8 +42,6 @@ void cg::renderer::rasterization_renderer::render()
 {
 	rasterizer->clear_render_target({132, 234, 1});
 
-	// TODO: Lab 1.03. Adjust `cg::renderer::rasterization_renderer` class to consume `cg::world::model`
-
 	for (size_t shape_id = 0; shape_id < model->get_index_buffers().size(); ++shape_id) {
 		rasterizer->set_vertex_buffer(model->get_vertex_buffers()[shape_id]);
 		rasterizer->set_index_buffer(model->get_index_buffers()[shape_id]);
@@ -53,7 +51,17 @@ void cg::renderer::rasterization_renderer::render()
 				);
 	}
 
-	// TODO: Lab 1.04. Implement `vertex_shader` lambda for the instance of `cg::renderer::rasterizer`
+	float4x4 matrix = mul(
+				camera->get_projection_matrix(),
+				camera->get_view_matrix(),
+				model->get_world_matrix()
+				);
+
+	rasterizer->vertex_shader = [&](float4 vertex, cg::vertex vertex_data) {
+		auto processed = mul(matrix, vertex);
+		return std::make_pair(processed, vertex_data);
+	};
+
 	// TODO: Lab 1.05. Implement `pixel_shader` lambda for the instance of `cg::renderer::rasterizer`
 
 	cg::utils::save_resource(*render_target, settings->result_path);
