@@ -126,7 +126,6 @@ namespace cg
 		};
 		float3 to_float3() const
 		{
-			// TODO: Why?
 						return float3{
 								static_cast<float>(r),
 								static_cast<float>(g),

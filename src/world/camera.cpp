@@ -62,7 +62,6 @@ void cg::world::camera::set_z_far(float in_z_far)
 
 const float4x4 cg::world::camera::get_view_matrix() const
 {
-	// TODO: what is up and what is the difference btw eye and lookAt?
 	float3 up{0.f, 1.f, 0.f};
 	float3 eye = position + get_direction();
 
