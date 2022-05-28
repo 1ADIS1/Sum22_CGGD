@@ -16,8 +16,6 @@ void cg::renderer::rasterization_renderer::init()
 	model = std::make_shared<cg::world::model>();
 	model->load_obj(settings->model_path);
 
-	// TODO: Lab 1.04. Setup an instance of camera `cg::world::camera` class in `cg::renderer::rasterization_renderer`
-
 	camera = std::make_shared<cg::world::camera>();
 	camera->set_height(static_cast<float>(settings->height));
 	camera->set_width(static_cast<float>(settings->width));
@@ -36,11 +34,16 @@ void cg::renderer::rasterization_renderer::init()
 	camera->set_z_far(settings->camera_z_far);
 
 	// TODO: Lab 1.06. Add depth buffer in cg::renderer::rasterization_renderer
-	
+
+	depth_buffer = std::make_shared<cg::resource<float>>(
+			settings->width,
+			settings->height
+	);
+	rasterizer->set_render_target(render_target, depth_buffer);
 }
 void cg::renderer::rasterization_renderer::render()
 {
-	rasterizer->clear_render_target({132, 234, 1});
+	rasterizer->clear_render_target({100, 142, 123});
 
 	float4x4 matrix = mul(
 			camera->get_projection_matrix(),
@@ -67,7 +70,7 @@ void cg::renderer::rasterization_renderer::render()
 			vertex_data.ambient_r,
 			vertex_data.ambient_g,
 			vertex_data.ambient_b,
-		}
+		};
 	};
 
 	cg::utils::save_resource(*render_target, settings->result_path);
