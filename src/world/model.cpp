@@ -133,7 +133,7 @@ void cg::world::model::load_obj(const std::filesystem::path& model_path)
 						vertex.nz = attrib.normals[3 * idx.normal_index + 2];
 					}
 
-					if (idx.texcoord_index == 0) {
+					if (idx.texcoord_index < 0) {
 						vertex.u = 0.f;
 						vertex.v = 0.f;
 					} else {

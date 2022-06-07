@@ -29,7 +29,7 @@ void cg::world::camera::set_theta(float in_theta)
 
 void cg::world::camera::set_phi(float in_phi)
 {
-	phi = in_phi;
+	phi = in_phi * static_cast<float>(M_PI) / 180.f;
 }
 
 void cg::world::camera::set_angle_of_view(float in_aov)
@@ -99,7 +99,7 @@ const float4x4 cg::world::camera::get_projection_matrix() const
 	return float4x4 {
 			{f / aspect_ratio, 0, 0, 0},
 			{0, f, 0, 0},
-			{0, 0, f / (z_near - z_far), -1},
+			{0, 0, z_far / (z_near - z_far), -1},
 			{0, 0, (z_far * z_near) / (z_near - z_far), 0},
 	};
 }
