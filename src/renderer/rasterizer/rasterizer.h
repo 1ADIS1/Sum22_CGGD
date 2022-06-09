@@ -17,14 +17,13 @@ namespace cg::renderer
 	{
 	public:
 		//TODO: is it correct?
-		constexpr static const float FLT_MAX = 1.0f;
 		rasterizer(){};
 		~rasterizer(){};
 		void set_render_target(
 				std::shared_ptr<resource<RT>> in_render_target,
 				std::shared_ptr<resource<float>> in_depth_buffer = nullptr);
 		void clear_render_target(
-				const RT& in_clear_value, const float in_depth = FLT_MAX);
+				const RT& in_clear_value, const float in_depth = 1.0f);
 
 		void set_vertex_buffer(std::shared_ptr<resource<VB>> in_vertex_buffer);
 		void set_index_buffer(std::shared_ptr<resource<unsigned int>> in_index_buffer);
