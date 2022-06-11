@@ -219,7 +219,6 @@ namespace cg::renderer
 		if (depth == 0) return miss_shader(ray);
 		depth--;
 
-		// TODO: Lab 2.02. Adjust trace_ray method of raytracer class to traverse geometry and call a closest hit shader
 		// TODO: Lab 2.04. Adjust `trace_ray` method of `raytracer` to use `any_hit_shader`
 		// TODO: Lab 2.05. Adjust trace_ray method of raytracer class to traverse the acceleration structure
 
