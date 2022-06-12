@@ -219,7 +219,6 @@ namespace cg::renderer
 		if (depth == 0) return miss_shader(ray);
 		depth--;
 
-		// TODO: Lab 2.04. Adjust `trace_ray` method of `raytracer` to use `any_hit_shader`
 		// TODO: Lab 2.05. Adjust trace_ray method of raytracer class to traverse the acceleration structure
 
 		payload closest_hit_payload = {};
@@ -233,13 +232,17 @@ namespace cg::renderer
 			{
 				closest_hit_payload = payload;
 				closest_triangle = &triangle;
+
+				if (any_hit_shader)
+					return any_hit_shader(ray, payload, triangle);
 			}
 		}
 
 		if (closest_hit_payload.t < max_t)
 		{
 			if (closest_hit_shader)
-				return closest_hit_shader(ray, closest_hit_payload, *closest_triangle, depth);
+				return closest_hit_shader(ray, closest_hit_payload,
+										  *closest_triangle, depth);
 		}
 
 		return miss_shader(ray);
@@ -257,6 +260,7 @@ namespace cg::renderer
 		float det = dot(triangle.ba, pvec);
 		if (det > -1e-8 && det < 1e-8)
 			return payload;
+
 		float inv_det = 1.f / det;
 		float3 tvec = ray.position - triangle.a;
 		float u = dot(tvec, pvec) * inv_det;
@@ -265,11 +269,11 @@ namespace cg::renderer
 
 		float3 qvec = cross(tvec, triangle.ba);
 		float v = dot(ray.direction, qvec) * inv_det;
-		if (u < 0.f || u + v > 1.f)
+		if (v < 0.f || u + v > 1.f)
 			return payload;
 
 		payload.t = dot(triangle.ca, qvec) * inv_det;
-		payload.bary = float3(1.f - u - v, u, v);
+		payload.bary = float3{1.f - u - v, u, v};
 
 		return payload;
 	}
