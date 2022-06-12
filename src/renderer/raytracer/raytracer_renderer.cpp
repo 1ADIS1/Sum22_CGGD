@@ -98,8 +98,7 @@ void cg::renderer::ray_tracing_renderer::render()
 
 	cg::utils::save_resource(*render_target, settings->result_path);
 
-	// TODO: Lab 2.03. Adjust closest_hit_shader of raytracer to implement Lambertian shading model
-	// TODO: Lab 2.04. Define any_hit_shader and miss_shader for shadow_raytracer
-	// TODO: Lab 2.04. Adjust closest_hit_shader of raytracer to cast shadows rays and to ignore occluded lights
+	shadow_raytracer = std::make_shared<cg::renderer::raytracer<cg::vertex, cg::unsigned_color>>();
+
 	// TODO: Lab 2.05. Adjust ray_tracing_renderer class to build the acceleration structure
 }
