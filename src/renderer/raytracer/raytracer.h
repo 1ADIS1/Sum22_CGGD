@@ -196,6 +196,7 @@ namespace cg::renderer
 			float3 right, float3 up, size_t depth, size_t accumulation_num)
 	{
 		for (int x = 0; x < width; x++) {
+#pragma omp parallel for
 			for (int y = 0; y < height; y++) {
 				float u = (2.f * x) / static_cast<float>(width - 1) - 1.f;
 				float v = (2.f * y) / static_cast<float>(height - 1) - 1.f;
@@ -286,7 +287,18 @@ namespace cg::renderer
 	template<typename VB, typename RT>
 	float2 raytracer<VB, RT>::get_jitter(int frame_id)
 	{
-		// TODO: Lab 2.06. Implement `get_jitter` method of `raytracer` class
+		float2 result{0.f, 0.f};
+		constexpr int base_x = 2;
+		int index = frame_id++;
+		float inv_base = 1.f / base_x;
+		float fraction = inv_base;
+		while(index > 0) {
+			result.x += (index % base_x) * fraction;
+			index /= base_x;
+			fraction *= inv_base;
+		}
+
+		constexpr int base_y = 3;
 	}
 
 
@@ -302,6 +314,7 @@ namespace cg::renderer
 
 		aabb_min = max(aabb_min, triangle.a);
 		aabb_min = max(aabb_min, triangle.b);
+		aabb_min = max(aabb_min, triangle.c);
 		aabb_min = max(aabb_min, triangle.c);
 
 	}
