@@ -30,7 +30,7 @@ target_include_directories(Rasterization PRIVATE ${INCLUDE})
 set_property(TARGET Rasterization PROPERTY VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
 
 find_package(OpenMP REQUIRED)
-add_executable(Raytracing src/main.cpp src/renderer/raytracer/raytracer_renderer.cpp ${SOURCE})
+add_executable(Raytracing src/main.cpp src/renderer/raytracer/raytracer_renderer.cpp ${SOURCE} src/renderer/raytracer/New_creativity.cpp)
 target_compile_definitions(Raytracing PUBLIC RAYTRACING)
 target_include_directories(Raytracing PRIVATE ${INCLUDE})
 target_link_libraries(Raytracing PRIVATE OpenMP::OpenMP_CXX)
