@@ -42,6 +42,8 @@ void cg::renderer::ray_tracing_renderer::init()
 					 );
 
 	shadow_raytracer = std::make_shared<cg::renderer::raytracer<cg::vertex, cg::unsigned_color>>();
+	shadow_raytracer->set_vertex_buffers(model->get_vertex_buffers());
+	shadow_raytracer->set_index_buffers(model->get_index_buffers());
 }
 
 void cg::renderer::ray_tracing_renderer::destroy() {}
@@ -53,7 +55,8 @@ void cg::renderer::ray_tracing_renderer::render()
 	raytracer->clear_render_target({0, 0, 0});
 	raytracer->miss_shader = [](const ray& ray){
 		payload payload{};
-		payload.color = {0.f, 0.f, (ray.direction.y + 1.f) * 0.5f};
+		//payload.color = {0.f, 20.f, (ray.direction.y + 1.f) * 0.8f}; //background color
+		payload.color = {0.f,0.f,0.f};
 		return payload;
 	};
 	raytracer->closest_hit_shader = [&](const ray& ray, payload& payload,
@@ -115,6 +118,4 @@ void cg::renderer::ray_tracing_renderer::render()
 	std::cout << "Duration of raytracing: " << raytracing_duration.count() << "ms\n";
 
 	cg::utils::save_resource(*render_target, settings->result_path);
-
-	// TODO: Lab 2.05. Adjust ray_tracing_renderer class to build the acceleration structure
 }
