@@ -86,3 +86,12 @@ newmtl light
   Kd 0.78 0.78 0.78
   Ks 0 0 0
   Ke 17 12 4
+
+newmtl neonBlueLight
+  Ns 5.000
+  Ni 1.0000
+  illum 4
+  Ka 0.56 0.73 0.12 # Blue
+  Kd 0.56 0.73 0.12
+  Ks 100 100 0
+  Ke 77 77 255
