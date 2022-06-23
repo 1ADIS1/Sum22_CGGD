@@ -155,8 +155,6 @@ void cg::renderer::dx12_renderer::create_command_list()
 
 void cg::renderer::dx12_renderer::load_pipeline()
 {
-	// TODO Lab 3.02. Bring everything together in `load_pipeline` method
-
 	ComPtr<IDXGIFactory4> dxgi_factory = get_dxgi_factory();
 	initialize_device(dxgi_factory);
 	create_direct_command_queue();
