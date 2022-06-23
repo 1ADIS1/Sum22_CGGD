@@ -103,7 +103,6 @@ void cg::renderer::dx12_renderer::create_direct_command_queue()
 
 void cg::renderer::dx12_renderer::create_swap_chain(ComPtr<IDXGIFactory4>& dxgi_factory)
 {
-	// TODO Lab 3.02. Create a swap chain and bind it to window
 	DXGI_SWAP_CHAIN_DESC1 swap_chain_desc = {};
 	swap_chain_desc.BufferCount = frame_number;
 	swap_chain_desc.Height = settings->height;
@@ -157,6 +156,12 @@ void cg::renderer::dx12_renderer::create_command_list()
 void cg::renderer::dx12_renderer::load_pipeline()
 {
 	// TODO Lab 3.02. Bring everything together in `load_pipeline` method
+
+	ComPtr<IDXGIFactory4> dxgi_factory = get_dxgi_factory();
+	initialize_device(dxgi_factory);
+	create_direct_command_queue();
+	create_swap_chain(dxgi_factory);
+	create_render_target_views();
 }
 
 D3D12_STATIC_SAMPLER_DESC cg::renderer::dx12_renderer::get_sampler_descriptor()
