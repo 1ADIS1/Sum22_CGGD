@@ -502,7 +502,7 @@ void cg::renderer::dx12_renderer::create_constant_buffer_view(const ComPtr<ID3D1
 void cg::renderer::dx12_renderer::load_assets()
 {
 	create_root_signature(nullptr, 0);
-	create_pso("shader.hlsl");
+	create_pso("shaders.hlsl");
 	create_command_allocators();
 	create_command_list();
 	command_list->Close(); //TODO: Check if this is correct
