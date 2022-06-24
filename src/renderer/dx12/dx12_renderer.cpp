@@ -56,6 +56,7 @@ void cg::renderer::dx12_renderer::destroy()
 void cg::renderer::dx12_renderer::update()
 {
 	// TODO Lab 3.08. Implement `update` method of `dx12_renderer`
+
 }
 
 void cg::renderer::dx12_renderer::render()
