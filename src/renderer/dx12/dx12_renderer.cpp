@@ -139,7 +139,6 @@ void cg::renderer::dx12_renderer::create_render_target_views()
 			D3D12_DESCRIPTOR_HEAP_TYPE_RTV,
 			frame_number
 			);
-	// TODO Lab 3.04. Create render target views
 
 	for(UINT i = 0; i < frame_number; i++)
 	{
