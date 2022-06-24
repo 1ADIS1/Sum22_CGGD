@@ -568,37 +568,54 @@ void cg::renderer::dx12_renderer::load_assets()
 				index_buffers[i],
 				index_buffer_size
 				);
-
-		// Constant buffer
-		std::wstring const_buffer_name(L"Constant buffer");
-		create_resource_on_upload_heap(
-				constant_buffer,
-				64 * 1024,
-				const_buffer_name
-				);
-
-		copy_data(&cb,
-				  sizeof(cb),
-				  constant_buffer);
-		CD3DX12_RANGE read_range(0, 0);
-		THROW_IF_FAILED(constant_buffer->Map(0,
-												  &read_range,
-												  reinterpret_cast<void**>(&constant_buffer_data_begin)
-														  )
-		);
-
-		cbv_srv_heap.create_heap(
-				device,
-				D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
-				1,
-				D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE
-				);
-
-		create_constant_buffer_view(
-				constant_buffer,
-				cbv_srv_heap.get_cpu_descriptor_handle(0)
-				);
 	}
+
+	// Constant buffer
+	std::wstring const_buffer_name(L"Constant buffer");
+	create_resource_on_upload_heap(
+			constant_buffer,
+			64 * 1024,
+			const_buffer_name
+	);
+
+	copy_data(&cb,
+			  sizeof(cb),
+			  constant_buffer);
+	CD3DX12_RANGE read_range(0, 0);
+	THROW_IF_FAILED(constant_buffer->Map(0,
+										 &read_range,
+										 reinterpret_cast<void**>(&constant_buffer_data_begin)
+												 )
+	);
+
+	cbv_srv_heap.create_heap(
+			device,
+			D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
+			1,
+			D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE
+	);
+
+	create_constant_buffer_view(
+			constant_buffer,
+			cbv_srv_heap.get_cpu_descriptor_handle(0)
+	);
+
+	// Create fence
+	THROW_IF_FAILED(device->CreateFence(
+			0,
+			D3D12_FENCE_FLAG_NONE,
+			IID_PPV_ARGS(&fence)
+			)
+	);
+	fence_event = CreateEvent(nullptr,
+							  FALSE,
+							  FALSE,
+							  nullptr);
+	if (fence_event == nullptr)
+		THROW_IF_FAILED(HRESULT_FROM_WIN32(GetLastError()));
+
+	//TODO: Will be required later
+//	wait_for_gpu();
 }
 
 
@@ -687,7 +704,16 @@ void cg::renderer::dx12_renderer::move_to_next_frame()
 
 void cg::renderer::dx12_renderer::wait_for_gpu()
 {
-	// TODO Lab 3.07. Implement `wait_for_gpu` method
+	THROW_IF_FAILED(command_queue->Signal(
+			fence.Get(),
+			fence_values[frame_index]
+			));
+	THROW_IF_FAILED(fence->SetEventOnCompletion(
+			fence_values[frame_index],
+			fence_event
+			));
+	WaitForSingleObjectEx(fence_event, INFINITE, FALSE);
+	fence_values[frame_index]++;
 }
 
 
