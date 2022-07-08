@@ -279,7 +279,7 @@ D3D12_STATIC_SAMPLER_DESC cg::renderer::dx12_renderer::get_sampler_descriptor()
 	sampler_desc.MaxAnisotropy = 16;
 	sampler_desc.ShaderRegister = 0;
 	sampler_desc.RegisterSpace = 0;
-	sampler_desc.ShaderRegister = D3D12_SHADER_VISIBILITY_PIXEL;
+	sampler_desc.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 	return sampler_desc;
 }
 
@@ -514,6 +514,7 @@ void cg::renderer::dx12_renderer::create_pso(const std::string& shader_name)
 			"ps_5_0"
 	);
 	pso_desc.PS = CD3DX12_SHADER_BYTECODE(pixel_shader_texture.Get());
+
 	THROW_IF_FAILED(device->CreateGraphicsPipelineState(
 			&pso_desc,
 			IID_PPV_ARGS(&pipeline_state_texture))
@@ -609,6 +610,14 @@ D3D12_INDEX_BUFFER_VIEW cg::renderer::dx12_renderer::create_index_buffer_view(co
 
 void cg::renderer::dx12_renderer::create_shader_resource_view(const ComPtr<ID3D12Resource>& texture, D3D12_CPU_DESCRIPTOR_HANDLE cpu_handler)
 {
+	D3D12_SHADER_RESOURCE_VIEW_DESC srv_desc{};
+	srv_desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	srv_desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	srv_desc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	srv_desc.Texture2D.MipLevels = 1;
+
+	device->CreateShaderResourceView(texture.Get(), &srv_desc, cpu_handler);
+
 }
 
 void cg::renderer::dx12_renderer::create_constant_buffer_view(const ComPtr<ID3D12Resource>& buffer, D3D12_CPU_DESCRIPTOR_HANDLE cpu_handler)
@@ -863,7 +872,27 @@ void cg::renderer::dx12_renderer::populate_command_list()
 			1.0f, 0, 0, nullptr);
 	command_list->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
+	bool is_plain_color = true;
+
 	for (size_t s = 0; s < model->get_vertex_buffers().size(); ++s) {
+
+		if(!model->get_per_shape_texture_files()[s].empty())
+		{
+			if (is_plain_color)
+			{
+				command_list->SetPipelineState(pipeline_state_texture.Get());
+				is_plain_color = false;
+			}
+			command_list->SetGraphicsRootDescriptorTable(
+					1,
+					cbv_srv_heap.get_gpu_descriptor_handle(static_cast<UINT>(s + 1))
+					);
+		}
+		else if (!is_plain_color) {
+			command_list->SetPipelineState(pipeline_state.Get());
+			is_plain_color = true;
+		}
+
 		command_list->IASetVertexBuffers(0, 1, &vertex_buffer_views[s]);
 		command_list->IASetIndexBuffer(&index_buffer_views[s]);
 		command_list->DrawIndexedInstanced(
