@@ -21,6 +21,18 @@ struct PSInput
     float3 world_position : POSITION;
     float3 normal : NORMAL;
 };
+
+PSInput VSMain(float4 position : POSITION, float4 normal: NORMAL, float4 ambient : COLOR0, float4 diffuse : COLOR1,  float4 emissive : COLOR2, float4 texcoords : TEXCOORD)
+{
+    PSInput result;
+    result.position = mul(mwpMatrix, position);
+    result.color = ambient;
+    result.uv = texcoords.xy;
+    result.world_position = position.xyz;
+    result.normal = normal.xyz;
+    return result;
+}
+
 PSInput VSShadowMap(float4 position : POSITION, float4 normal: NORMAL, float4 ambient : COLOR0, float4 diffuse : COLOR1,  float4 emissive : COLOR2, float4 texcoords : TEXCOORD)
 {
     PSInput result;

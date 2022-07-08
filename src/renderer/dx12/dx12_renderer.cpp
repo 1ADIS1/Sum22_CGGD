@@ -41,8 +41,8 @@ void cg::renderer::dx12_renderer::init()
 					settings->camera_position[2] - 5.f}
 	);
 
-	shadow_light->set_phi(-90);
-	shadow_light->set_theta(0);
+	shadow_light->set_phi(-90.f);
+	shadow_light->set_theta(0.f);
 	shadow_light->set_angle_of_view(settings->camera_angle_of_view);
 	shadow_light->set_z_near(settings->camera_z_near);
 	shadow_light->set_z_far(settings->camera_z_far);
@@ -768,8 +768,9 @@ void cg::renderer::dx12_renderer::load_assets()
 									   vertex_buffer_size,
 									   vertex_buffer_name
 									   );
-		create_resource_on_upload_heap(upload_vertex_buffers[i],
-									   vertex_buffer_size);
+		create_resource_on_upload_heap(
+				upload_vertex_buffers[i],
+				vertex_buffer_size);
 
 		copy_data(vertex_buffer_data->get_data(),
 				  vertex_buffer_size,
@@ -794,8 +795,9 @@ void cg::renderer::dx12_renderer::load_assets()
 									   index_buffer_size,
 									   index_buffer_name
 		);
-		create_resource_on_upload_heap(upload_index_buffers[i],
-									   index_buffer_size);
+		create_resource_on_upload_heap(
+				upload_index_buffers[i],
+				index_buffer_size);
 
 		copy_data(index_buffer_data->get_data(),
 				  index_buffer_size,
@@ -849,7 +851,8 @@ void cg::renderer::dx12_renderer::load_assets()
 				GetRequiredIntermediateSize(textures[i].Get(), 0, 1)
 				);
 
-		create_resource_on_upload_heap(upload_textures[i], upload_buffer_size);
+		create_resource_on_upload_heap(upload_textures[i],
+									   upload_buffer_size);
 
 		copy_data(image,
 				  upload_buffer_size,
@@ -968,7 +971,7 @@ void cg::renderer::dx12_renderer::populate_command_list()
 					D3D12_RESOURCE_STATE_RENDER_TARGET),
 
 			CD3DX12_RESOURCE_BARRIER::Transition(
-					render_targets[frame_index].Get(),
+					shadow_map.Get(),
 					D3D12_RESOURCE_STATE_DEPTH_WRITE,
 					D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
 					)
@@ -1042,7 +1045,7 @@ void cg::renderer::dx12_renderer::populate_command_list()
 					D3D12_RESOURCE_STATE_PRESENT
 					),
 			CD3DX12_RESOURCE_BARRIER::Transition(
-					render_targets[frame_index].Get(),
+					shadow_map.Get(),
 					D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
 					D3D12_RESOURCE_STATE_DEPTH_WRITE
 					)
