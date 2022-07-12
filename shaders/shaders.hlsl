@@ -49,7 +49,7 @@ float CalcUnshadowedAmount(float3 world_pos)
 	float2 shadow_tex_coords = 0.5f * light_space_position.xy + 0.5f;
 	shadow_tex_coords.y = 1.f - shadow_tex_coords.y;
 
-	float light_space_depth = light_space_position.z - 0.0005f;
+	float light_space_depth = light_space_position.z - 0.00005f;
 	return (g_shadow_map.Sample(g_sampler, shadow_tex_coords) >= light_space_depth) ? 1.0f : 0.5f;
 }
 
